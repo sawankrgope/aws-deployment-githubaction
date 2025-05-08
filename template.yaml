@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Simple Lambda Deployment
+
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: SimpleLambdaFunction
+      Handler: app.handler
+      Runtime: python3.9
+      Role: arn:aws:iam::867344458772:role/lambda-deployment-role-sawan
+      Code:
+        S3Bucket: !Ref LambdaS3Bucket
+        S3Key: !Ref LambdaS3Key
+
+Parameters:
+  LambdaS3Bucket:
+    Type: String
+    Description: S3 bucket where Lambda zip is stored
+  LambdaS3Key:
+    Type: String
+    Description: Lambda zip filename
