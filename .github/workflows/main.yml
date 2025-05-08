@@ -1,11 +1,11 @@
-name: Deploy Lambda via CloudFormation
+name: Deploy API Gateway
 
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  deploy-api:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +19,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Upload Lambda ZIP to S3
-      run: |
-        zip lambda.zip lambda/app.py
-        aws s3 cp lambda.zip s3://my-lambda-bucket-1234-sawan/lambda.zip
-
-    - name: Deploy CloudFormation stack
+    - name: Deploy API Gateway via CloudFormation
       run: |
         aws cloudformation deploy \
-          --template-file template.yaml \
-          --stack-name simple-lambda-stack \
+          --template-file api-gateway-template.yaml \
+          --stack-name simple-api-stack \
           --capabilities CAPABILITY_NAMED_IAM \
-          --parameter-overrides \
-            LambdaS3Bucket=my-lambda-bucket-1234-sawan \
-            LambdaS3Key=lambda.zip
+          --parameter-overrides LambdaFunctionArn=arn:aws:lambda:us-east-1:867344458772:function:SimpleLambdaFunction
